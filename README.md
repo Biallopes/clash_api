@@ -1,4 +1,7 @@
-#clash
+## clash Royale 
+
+Code to control clan to the Clash Royale game.
+
 
 
 1. Criar ambiente virtual:
