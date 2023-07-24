@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore")
 class statistics_clash():
 
     current_directory = os.getcwd()
-    file_path = f'{current_directory}/clash_api/data/downgrade_list.csv'
+    file_path = f'{current_directory}/clash/data/downgrade_list.csv'
 
     def check_downgrade(self):
         '''
@@ -89,7 +89,7 @@ class statistics_clash():
 
         promoted_participants['action'] = np.select(conditions, choices, default='promote')
 
-        promoted_participants = promoted_participants[['name','action', 'rescue_date']]
+#        promoted_participants = promoted_participants[['name','action', 'rescue', 'rescue_date']]
 
         #delete downgrade to promoted members
         delete_downgrade = promoted_participants[promoted_participants['rescue'] == 'True']

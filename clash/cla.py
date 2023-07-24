@@ -1,5 +1,5 @@
-from clash_api import clash
-from stats import statistics_clash
+from functions.clash_api import clash
+from functions.stats import statistics_clash
 import os
 import warnings
 
@@ -54,7 +54,9 @@ def main():
 
     promote_participants = clas_statistics.return_promote_participants(statistics,bad_participants)
 
-    bad_participants, promote_participants
+    print(bad_participants.sort_values(by='fame', ascending=False))
+
+    print(promote_participants)
 
     print('fineshed pipeline')
 
