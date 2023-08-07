@@ -56,9 +56,18 @@ def main():
 
     promote_participants = clas_statistics.return_promote_participants(statistics,bad_participants)
 
-    print(bad_participants.sort_values(by='fame', ascending=False))
+    print('Bad participants to downgrade or delete.')
+    if len(bad_participants) > 0:
+        print(bad_participants.sort_values(by='fame', ascending=False))
+    else:
+        print('Does not have downgrades or deletes')
+    print('-'*50)
 
-    print(promote_participants)
+    print('Good participants to promote.')
+    if len(promote_participants) > 0:
+        print(promote_participants)
+    else:
+        print('Does not have promotes')
 
     print('fineshed pipeline')
 
