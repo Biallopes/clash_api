@@ -43,14 +43,16 @@ def main():
 
     statistics_river_race_result = clash_api.statistics_river_race(statistics_river_race_URL, token,cla_tag,cla_members_URL)
 
-    statistics = statistics_river_race_result[['cla_ranking', 'seasonId','sectionIndex','createdDate', 'tag', 'name', 'role', 'fame']]
+    statistics = statistics_river_race_result[['cla_ranking', 'seasonId','sectionIndex','createdDate', 'tag', 'name', 'role', 'fame','decksUsed']]
     statistics['rank_river_race'] = statistics['createdDate'].rank(method='dense', ascending=False)
     min_points = 2000
-
+    decks_day = 4 
+    war_days = 4
+    min_decks = decks_day * war_days
     #---------------------------#
     #--> Check promote and downgrade
     #---------------------------#
-    bad_participants = clas_statistics.return_bad_participants(statistics,min_points)
+    bad_participants = clas_statistics.return_bad_participants(statistics,min_points,min_decks)
 
     promote_participants = clas_statistics.return_promote_participants(statistics,bad_participants)
 
