@@ -8,8 +8,9 @@ warnings.filterwarnings("ignore")
 
 class statistics_clash():
 
-    current_directory = os.getcwd()
-    file_path = f'{current_directory}/clash/data/downgrade_list.csv'
+    run_file = os.path.realpath(__file__)
+    current_directory = os.path.dirname(os.path.dirname(run_file))
+    file_path = f'{current_directory}/data/downgrade_list.csv'
 
     def check_downgrade(self):
         '''
@@ -31,12 +32,13 @@ class statistics_clash():
 
         df.to_csv(self.file_path, index=False)
 
-    def return_bad_participants(self,statistics,min_points):
+    def return_bad_participants(self,statistics,min_points,min_decks):
         '''
         return members that don't achieved the min points
         '''        
         last_river_race_data = statistics[statistics['rank_river_race'] == 1]
         last_river_race_data_min_points = last_river_race_data[last_river_race_data['fame'] < min_points]
+        last_river_race_data_min_points = last_river_race_data_min_points[last_river_race_data_min_points['decksUsed'] < min_decks]
         bad_participants = last_river_race_data_min_points[['name','tag','role','fame','createdDate']]
 
         conditions = [
