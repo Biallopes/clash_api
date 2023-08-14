@@ -2,6 +2,7 @@ from functions.clash_api import clash
 from functions.stats import statistics_clash
 import os
 import warnings
+import sys
 
 #-----> to run locally
 from dotenv import load_dotenv
@@ -32,7 +33,10 @@ def main():
 
     #search a cla tag
     cla_data = clash_api.make_request(url, token, cla_name)
-    cla_tag=cla_data.get('tag').replace("#","%23")
+    try: 
+        cla_tag=cla_data.get('tag').replace("#","%23")
+    except:
+        sys.exit(f"Error: {cla_data.get('reason')}") 
 
     #search a cla members
     cla_members_URL = f'{url_base}/clans/{cla_tag}/members'
