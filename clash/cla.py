@@ -58,7 +58,7 @@ def main():
     #---------------------------#
     bad_participants = clas_statistics.return_bad_participants(statistics,min_points,min_decks)
 
-    promote_participants = clas_statistics.return_promote_participants(statistics,bad_participants)
+    promote_participants = clas_statistics.return_promote_participants(statistics,bad_participants,min_points,min_decks)
 
     print('Bad participants to downgrade or delete.')
     if len(bad_participants) > 0:

@@ -24,7 +24,6 @@ class clash():
     def cla_members(self,cla_members_url,token):
         cla_members_data = self.make_request(cla_members_url, token)
         return pd.DataFrame(cla_members_data.get('items'))
-                                                       
 
     def statistics_river_race(self,statistics_river_race_URL,token,cla_tag,cla_members_url):
         participants_war = pd.DataFrame()

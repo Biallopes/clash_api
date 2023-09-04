@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import warnings
+from functions.clash_api import clash
 
 '''Warning ignoring'''
 warnings.filterwarnings("ignore")
@@ -11,6 +12,7 @@ class statistics_clash():
     run_file = os.path.realpath(__file__)
     current_directory = os.path.dirname(os.path.dirname(run_file))
     file_path = f'{current_directory}/data/downgrade_list.csv'
+    eligible_file_path = f'{current_directory}/data/eligible_prize.csv'
 
     def check_downgrade(self):
         '''
@@ -39,7 +41,7 @@ class statistics_clash():
         last_river_race_data = statistics[statistics['rank_river_race'] == 1]
         last_river_race_data_min_points = last_river_race_data[last_river_race_data['fame'] < min_points]
         last_river_race_data_min_points = last_river_race_data_min_points[last_river_race_data_min_points['decksUsed'] < min_decks]
-        bad_participants = last_river_race_data_min_points[['name','tag','role','fame','createdDate']]
+        bad_participants = last_river_race_data_min_points[['name','tag','role','fame','decksUsed','createdDate']]
 
         conditions = [
                         bad_participants['role'] == 'member',
@@ -63,12 +65,15 @@ class statistics_clash():
 
         return bad_participants
 
-    def return_promote_participants(self,statistics,bads):
+    def return_promote_participants(self,statistics,bads,min_points,min_decks):
         '''
         return members that achieved the min points to the river races settled as a goal
         '''   
         #check_downgrades    
         check_downgrade = self.check_downgrade()
+        #create eligible prize list
+        self.eligible_prize(statistics,min_points,min_decks)
+
         date_last_river = str(statistics[statistics['rank_river_race'] == 1]['createdDate'].iloc[0])[:10]
         check_downgrade.loc[check_downgrade['rescue_date'] == date_last_river, 'rescue'] = 'True'
         check_downgrade.loc[check_downgrade['rescue_date'] != date_last_river, 'rescue'] = 'False'
@@ -100,3 +105,27 @@ class statistics_clash():
 
         return promoted_participants
     
+    def eligible_prize(self,data,min_points,min_decks ):
+
+        possible_eligibles = {}
+        df_members = pd.DataFrame({'tag': data['tag'].unique(), 'name': data['name'].unique()})
+
+        for season in data['sectionIndex'].unique():
+            s_participants = data.loc[data['sectionIndex'] == season]
+            s_participants['eligible'] = s_participants.apply(lambda row: 1 if row['fame'] >= min_points or row['decksUsed'] >= min_decks else 0, axis=1)
+            dict_eligible = dict(zip(s_participants['tag'], s_participants['eligible']))
+
+            for chave, novo_valor in dict_eligible.items():
+                if novo_valor != 0:
+                    if chave in possible_eligibles:
+                        possible_eligibles[chave] += novo_valor
+                    else:
+                        possible_eligibles[chave] = novo_valor
+        
+        eligibles = {chave: valor for chave, valor in possible_eligibles.items() if valor == 5}
+
+        df_eligibles = pd.DataFrame({'tag': list(eligibles.keys())})
+        df_eligibles = pd.merge(df_eligibles, df_members, on='tag', how='inner')
+        df_eligibles.to_csv(self.eligible_file_path, mode='w', header=True, index=False)
+
+        print(f'Create file {self.eligible_file_path} to eligibles for prize.')
