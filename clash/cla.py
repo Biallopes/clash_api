@@ -18,6 +18,7 @@ def main():
     #---------------------------#
     key = os.environ['key']
     cla_name = os.environ['cla_name']
+    cla_env_tag = os.environ['tag']
     #---------------------------#
     #--> clash variables
     #---------------------------#
@@ -31,12 +32,10 @@ def main():
     clash_api = clash()
     clas_statistics = statistics_clash()
 
-    #search a cla tag
-    cla_data = clash_api.make_request(url, token, cla_name)
     try: 
-        cla_tag=cla_data.get('tag').replace("#","%23")
+        cla_tag=cla_env_tag.replace("#","%23")
     except:
-        sys.exit(f"Error: {cla_data.get('reason')}") 
+        sys.exit(f"Error: not possible to transform the tag {cla_env_tag}") 
 
     #search a cla members
     cla_members_URL = f'{url_base}/clans/{cla_tag}/members'

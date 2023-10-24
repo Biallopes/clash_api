@@ -7,14 +7,14 @@ warnings.filterwarnings("ignore")
 
 class clash():
 
-    def make_request(self,url, token, cla_name=None):
+    def make_request(self,url, token, cla_tag=None):
         cla_search = requests.get(url,headers={'Authorization':token})
         cla_search = cla_search.json()
 
         try:
-            if cla_name != None:
+            if cla_tag != None:
                 for cla in cla_search.get('items'):
-                    if cla.get('name') == cla_name:
+                    if cla.get('tag') == cla_tag:
                         cla_search = cla
         except:
             print(cla_search.get('message'))

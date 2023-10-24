@@ -108,7 +108,7 @@ class statistics_clash():
     def eligible_prize(self,data,min_points,min_decks ):
 
         possible_eligibles = {}
-        df_members = pd.DataFrame({'tag': data['tag'].unique(), 'name': data['name'].unique()})
+        df_members = data[['tag','name']].drop_duplicates()
 
         for season in data['sectionIndex'].unique():
             s_participants = data.loc[data['sectionIndex'] == season]
