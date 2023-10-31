@@ -109,9 +109,10 @@ class statistics_clash():
 
         possible_eligibles = {}
         df_members = data[['tag','name']].drop_duplicates()
+        data['combined_season'] = data['seasonId'].astype(str) + '_' + data['sectionIndex'].astype(str)
 
-        for season in data['sectionIndex'].unique():
-            s_participants = data.loc[data['sectionIndex'] == season]
+        for season in data['combined_season'].unique():
+            s_participants = data.loc[data['combined_season'] == season]
             s_participants['eligible'] = s_participants.apply(lambda row: 1 if row['fame'] >= min_points or row['decksUsed'] >= min_decks else 0, axis=1)
             dict_eligible = dict(zip(s_participants['tag'], s_participants['eligible']))
 
